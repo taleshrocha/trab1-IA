@@ -1,3 +1,0 @@
-/home/tales/Documents/bti/2023.1/IA/trab1-IA/build/CMakeFiles/trab1.dir
-/home/tales/Documents/bti/2023.1/IA/trab1-IA/build/CMakeFiles/edit_cache.dir
-/home/tales/Documents/bti/2023.1/IA/trab1-IA/build/CMakeFiles/rebuild_cache.dir

@@ -1,1 +1,0 @@
-/usr/bin/c++ -fsanitize=address,undefined CMakeFiles/trab1.dir/src/main.cpp.o -o trab1 
