@@ -13,10 +13,12 @@ using namespace std;
 class Population {
 
 public:
-  Population(size_t maxPopulation, size_t maxGeneration) {
-    this->maxPopulation = maxPopulation;
+  Population(size_t maxGeneration, size_t maxPopulation, 
+             size_t crossoverRate, size_t mutationRate) {
     this->maxGeneration = maxGeneration;
-    //this.individuals = Individual[maxPopulation];
+    this->maxPopulation = maxPopulation;
+    this->crossoverRate = crossoverRate;
+    this->mutationRate = mutationRate;
 
     // Creates a initial individuals with random genes
     for (size_t i = 0; i < maxPopulation; i++) {
@@ -42,9 +44,8 @@ public:
     string frontGenes[selectionNumber];
     string backGenes[selectionNumber]; 
 
-    size_t crossoverRate = 0;
-
     for (size_t i = 0; i < maxGeneration; i++) {
+
       sort(individuals.begin(), individuals.end());
       cout << "(" << i << "," << averageFit() << ")";
       //cout << toString() << endl;
@@ -52,8 +53,8 @@ public:
       // Perserve up to 1/4 of the old generation
       oldGenPreserve = (rand() % (int) maxPopulation/4);
 
-      // Some number between 1 and 4;
-      crossoverRate = 1 + (rand() % 4);
+      // Some number between 0 and 3;
+      //crossoverRate = rand() % 4;
 
       for(size_t j = 0; j < selectionNumber; j++) {
         frontGenes[j] = (individuals[j].getGene()).substr(0,crossoverRate);
@@ -69,15 +70,24 @@ public:
         }
         individuals[j].setGene(frontGenes[front] + backGenes[back]);
         individuals[j].updateFit();
-        if(individuals[j].getFit() == 0) {
-          //cout << individuals[j].toString() << endl;
-          cout << "(" << i << "," << averageFit() << ")";
-          return j;
+      }
+
+      int random = 0;
+      for(size_t j = 0; j < maxPopulation; j++) {
+        random = rand() % 101;
+        //cout << random << " -- " << mutationRate << endl;
+        if(random <= mutationRate){
+          //cout << " -- MUTATE" << endl;
+          individuals[j].mutate();
         }
       }
 
-      for(size_t j = 0; j < maxPopulation/2; j++) {
-        individuals[rand() % (maxPopulation+1)].mutate();
+      for(size_t j = 0; j <= maxPopulation; j++) {
+        if(individuals[j].getFit() == 0) {
+          //cout << individuals[j].toString() << endl;
+          cout << "(" << i+1 << "," << averageFit() << ")";
+          return j;
+        }
       }
     }
     return -1;
@@ -86,7 +96,7 @@ public:
   double averageFit() {
     double sum = 0;
     for(auto individual : individuals)
-      sum += individual.getFit();
+    sum += individual.getFit();
 
     return sum / maxPopulation;
   }
@@ -114,5 +124,7 @@ public:
 private:
   size_t maxPopulation;
   size_t maxGeneration;
+  size_t crossoverRate;
+  size_t mutationRate;
   vector<Individual> individuals;
 };
